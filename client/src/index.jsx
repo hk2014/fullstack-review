@@ -12,29 +12,38 @@ class App extends React.Component {
     }
 
   }
-
-  componentDidMount() {
     //get
+  getRepos(){
     $.ajax({
+      url: 'http://localhost:1128/repos',
       type: 'GET',
-      sucess: (repos) => {
+      success: (repos) => { console.log('get request success: ', repos),
         this.setState({
           repos: repos
         })
-      }
+
+      },
+      error: (err) => console.log('get request failed: ', err)
     })
+  }
+  componentDidMount() {
+    this.getRepos();
   }
 
   search (term) {
    // console.log(`${term} was searched`);
     // TODO post
     $.ajax({
-      url: 'http://127.0.0.1:1128/repos',
-      dataType: 'application/json',
+      url: 'http://localhost:1128/repos',
+      //dataType: 'text',
       type: 'POST',
-      data: {username: JSON.stringify(term)},
-      success: (data) => console.log('post request success'),
-      error: (err) => console.log('post request failed: ' + err)
+      data: {term},
+      success: (data) => {console.log('post request success: ', data);
+      this.getRepos();
+      },
+      error: (err, err2, err3) => console.log('post request failed: ' , err2, err3),
+
+      //finally: (data) => console.log('finally:', data)
     })
   }
 
